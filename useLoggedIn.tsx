@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 export type Identity = {
@@ -5,16 +6,29 @@ export type Identity = {
   sub: string;
 };
 
-type LoggedIn = [true, Identity];
-type LoggedOut = [false, undefined];
+type LoggedIn = { loggedIn: true; identity: Identity; logout: () => void };
+type LoggedOut = { loggedIn: false; identity: null; logout: null };
 
 const useLoggedIn = () => {
-  const [cookies, setCookies] = useCookies(["name", "sub"]);
+  const hasWindow = typeof window !== "undefined";
 
-  if (cookies.name && cookies.sub) {
-    return [true, cookies] as LoggedIn;
+  const [cookies, setCookies, removeCookie] = useCookies(["name", "sub"]);
+  const [identity, setIdentity] = useState<Identity>();
+
+  useEffect(() => {
+    if (cookies.name && cookies.sub && hasWindow) {
+      setIdentity(cookies as Identity);
+    }
+  }, [hasWindow]);
+
+  if (identity) {
+    const logout = () => {
+      removeCookie("name");
+      removeCookie("sub");
+    };
+    return { loggedIn: true, identity, logout } as LoggedIn;
   } else {
-    return [false, undefined] as LoggedOut;
+    return { loggedIn: false } as LoggedOut;
   }
 };
 

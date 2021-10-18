@@ -28,7 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     cookies.set("sub", `${identity.sub}`, {
       httpOnly: false,
     });
-    res.send(identity);
+    res.redirect("/app");
 
     // res.redirect("/");
   } else {
