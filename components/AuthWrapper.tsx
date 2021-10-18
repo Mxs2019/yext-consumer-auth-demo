@@ -9,9 +9,11 @@ type Props = {
 };
 
 const AuthWrapper = ({ children }: Props) => {
-  const { loggedIn, identity } = useLoggedIn();
+  const { loggedIn, identity, loading } = useLoggedIn();
 
   console.log(loggedIn);
+
+  if (loading) return <div></div>;
 
   if (loggedIn) {
     return (

@@ -6,18 +6,32 @@ export type Identity = {
   sub: string;
 };
 
-type LoggedIn = { loggedIn: true; identity: Identity; logout: () => void };
-type LoggedOut = { loggedIn: false; identity: null; logout: null };
+type LoggedIn = {
+  loggedIn: true;
+  identity: Identity;
+  logout: () => void;
+  loading: boolean;
+};
+type LoggedOut = {
+  loggedIn: false;
+  identity: null;
+  logout: null;
+  loading: boolean;
+};
 
 const useLoggedIn = () => {
   const hasWindow = typeof window !== "undefined";
 
   const [cookies, setCookies, removeCookie] = useCookies(["name", "sub"]);
   const [identity, setIdentity] = useState<Identity>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (cookies.name && cookies.sub && hasWindow) {
-      setIdentity(cookies as Identity);
+    if (hasWindow) {
+      if (cookies.name && cookies.sub) {
+        setIdentity(cookies as Identity);
+      }
+      setLoading(false);
     }
   }, [hasWindow]);
 
@@ -26,9 +40,10 @@ const useLoggedIn = () => {
       removeCookie("name");
       removeCookie("sub");
     };
-    return { loggedIn: true, identity, logout } as LoggedIn;
+
+    return { loggedIn: true, identity, logout, loading } as LoggedIn;
   } else {
-    return { loggedIn: false } as LoggedOut;
+    return { loggedIn: false, loading } as LoggedOut;
   }
 };
 

@@ -5,7 +5,7 @@ import SignInWithYext from "../components/SignInWithYext";
 import useLoggedIn from "../useLoggedIn";
 
 const Home: NextPage = () => {
-  const { loggedIn, identity } = useLoggedIn();
+  const { loggedIn, identity, loading } = useLoggedIn();
   return (
     <div>
       <Head>
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         authentication. This is hosted on Vercel but uses Yext for
         authentication.
       </p>
-      {!loggedIn && (
+      {!loggedIn && !loading && (
         <div className="p-4 bg-gray-200 mt-4">
           <p>You are not currently logged in. Sign in below to continue.</p>
           <Link href="/app">
@@ -27,12 +27,12 @@ const Home: NextPage = () => {
           </Link>
         </div>
       )}
-      {!loggedIn && (
+      {!loggedIn && !loading && (
         <div className="mt-4">
           <SignInWithYext />
         </div>
       )}
-      {loggedIn && (
+      {loggedIn && !loading && (
         <div className="p-4 bg-gray-200 mt-4">
           <div>You are logged in as {identity?.name}. </div>
           <div className="flex gap-4">
