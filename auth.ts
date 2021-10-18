@@ -28,11 +28,7 @@ export const getIdentity = async (code: string, redirect_uri: string) => {
     }
   );
 
-  console.log(authRes.data);
-
   const { id_token } = authRes.data as any;
-
-  console.log(id_token);
 
   const identity: {
     given_name: string;

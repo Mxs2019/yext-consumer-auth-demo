@@ -10,10 +10,6 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const cookies = new Cookies(req, res);
 
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
-  const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
-  const client_secret = process.env.CLIENT_SECRET;
-
   const code = req.query.code as string;
   const redirect_uri = req.query.state as string;
   if (code && redirect_uri) {
